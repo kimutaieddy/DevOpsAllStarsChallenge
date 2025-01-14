@@ -56,7 +56,7 @@ def lambda_handler(event, context):
     
     # Adjust for Central Time (UTC-6)
     utc_now = datetime.now(timezone.utc)
-    central_time = utc_now - timedelta(hours=6)  # Central Time is UTC-6
+    central_time = utc_now - timedelta(hours=+3)  
     today_date = central_time.strftime("%Y-%m-%d")
     
     print(f"Fetching games for date: {today_date}")
