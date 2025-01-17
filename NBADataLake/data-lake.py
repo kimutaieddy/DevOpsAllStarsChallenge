@@ -22,3 +22,13 @@ s3_Client = boto3.client('s3', region_name=region)
 glue_Client = boto3.client('glue', region_name=region)
 athena_Client = boto3.client('athena', region_name=region) 
 
+def create_bucket():
+
+    try:
+        if region == "us-east-1":
+            s3_Client.create_bucket(Bucket=Marara_nba_data_lake)
+        else:
+            s3_Client.create_bucket(Bucket=Marara_nba_data_lake,CreateBucketConfiguration={'LocationConstraint': region})
+            print("Bucket created successfully")
+    except Exception as e:
+        print(f"Error creating bucket: {e}")
