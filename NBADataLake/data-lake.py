@@ -45,3 +45,61 @@ def create_Glue_Database()
         print(f"Database'{MararaNbaDataLake}' created successfully")
     except Exception as e:
         print(f"Error creating database: {e}")
+
+def create_glue_table():
+    try :
+        glue_Client.create_table(
+            Database = MararaNbaDataLake,
+            TableInput = {
+                'Name': 'nba_data',
+                'Description': 'NBA data from sportsdata.io',
+                'StorageDescriptor': {
+                    'Columns': [
+                        {
+                            'Name': 'game_id',
+                            'Type': 'string',
+                            'Comment': 'Unique identifier for the game'
+                        },
+                        {
+                            'Name': 'home_team',
+                            'Type': 'string',
+                            'Comment': 'Home team name'
+                        },
+                        {
+                            'Name': 'away_team',
+                            'Type': 'string',
+                            'Comment': 'Away team name'
+                        },
+                        {
+                            'Name': 'home_team_score',
+                            'Type': 'int',
+                            'Comment': 'Home team score'
+                        },
+                        {
+                            'Name': 'away_team_score',
+                            'Type': 'int',
+                            'Comment': 'Away team score'
+                        },
+                        {
+                            'Name': 'date',
+                            'Type': 'string',
+                            'Comment': 'Date of the game'
+                        }
+                    ],
+                    'Location': f's3://{Marara_nba_data_lake}/nba_data/',
+                    'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
+                    'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
+                    'Compressed': False,
+                    'SerdeInfo': {
+                        'SerializationLibrary': 'org.apache.hadoop.hive.serde2.OpenCSVSerde',
+                        'Parameters': {
+                            'separatorChar': ',',
+                            'quoteChar': '"',
+                            'skip.header.line.count': '1'
+                        }
+                    }
+                }
+            }
+        )
+
+    
