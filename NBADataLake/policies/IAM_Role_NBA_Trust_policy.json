@@ -1,0 +1,16 @@
+{
+    "version": "2012-10-17",
+    "statement": [
+        {
+            "effect": "Allow",
+            "principal": {
+                "service": [
+                    "glue.amazonaws.com",
+                    "athena.amazonaws.com",
+                    "s3.amazonaws.com"
+                ]
+            },
+            "action": "sts:AssumeRole"
+        }
+    ]
+}
