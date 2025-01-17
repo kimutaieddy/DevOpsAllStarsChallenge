@@ -32,3 +32,16 @@ def create_bucket():
             print("Bucket created successfully")
     except Exception as e:
         print(f"Error creating bucket: {e}")
+
+def create_Glue_Database()
+    
+    try:
+        glue_Client.create_database(
+            DatabaseInput={
+                'Name': MararaNbaDataLake,
+                'Description' : "Glue database for NBA sports analytics.",
+            }
+        )
+        print(f"Database'{MararaNbaDataLake}' created successfully")
+    except Exception as e:
+        print(f"Error creating database: {e}")
