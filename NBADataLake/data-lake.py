@@ -14,3 +14,5 @@ glue_db_name = "Marara_nba_data_lake"
 athena_output_location = "s3://Marara_nba-data-lake/athena_output"
 
 # Sportsdata.io configurations (loaded from .env)
+api_key = os.getenv("SPORTSDATAIO_API_KEY")
+nba_endpoint = os.getenv("SPORTSDATAIO_NBA_ENDPOINT")
