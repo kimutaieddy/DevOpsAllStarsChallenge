@@ -96,10 +96,26 @@ def create_glue_table():
                             'separatorChar': ',',
                             'quoteChar': '"',
                             'skip.header.line.count': '1'
-                        }
-                    }
-                }
+                        } ,
+                    } ,
+                },
+            },
+        )
+        print( f"Glue Table'nba_players' created successfully.")
+    except Exception as e:
+        print(f"Error creating table: {e}")
+
+def configure_athena() :
+
+    try :
+        athena_Client.start_query_execution(
+            QueryString = f"CREATE DATABASE IF NOT EXISTS {Marara_nba_data_lake}",
+            ResultConfiguration = {
+                'OutputLocation': athena_output_location,
             }
         )
+        print("Athena configured successfully.")
+    except Exception as e:
+        print(f"Error configuring Athena: {e}")
 
     
