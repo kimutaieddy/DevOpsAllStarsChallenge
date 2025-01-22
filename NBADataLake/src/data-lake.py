@@ -35,7 +35,7 @@ def create_bucket():
     except Exception as e:
         print(f"Error creating bucket: {e}")
 
-def create_Glue_Database():
+def create_glue_database():
     try:
         glue_Client.create_database(
             DatabaseInput={
@@ -43,18 +43,16 @@ def create_Glue_Database():
             }
         )
         print("Glue database created successfully")
+    except glue_Client.exceptions.AlreadyExistsException:
+        print("Glue database already exists.")
     except Exception as e:
         print(f"Error creating database: {e}")
 
-def fetch_nba_data():
-    response = requests.get(nba_endpoint, headers={"Ocp-Apim-Subscription-Key": api_key})
-    return response.json()
-
 def create_glue_table():
-    try :
+    try:
         glue_Client.create_table(
-            Database = MararaNbaDataLake,
-            TableInput = {
+            DatabaseName=glue_db_name,
+            TableInput={
                 'Name': 'nba_data',
                 'Description': 'NBA data from sportsdata.io',
                 'StorageDescriptor': {
@@ -77,50 +75,37 @@ def create_glue_table():
                         {
                             'Name': 'home_team_score',
                             'Type': 'int',
-                            'Comment': 'Home team score'
+                            'Comment': 'Score of the home team'
                         },
                         {
                             'Name': 'away_team_score',
                             'Type': 'int',
-                            'Comment': 'Away team score'
-                        },
-                        {
-                            'Name': 'date',
-                            'Type': 'string',
-                            'Comment': 'Date of the game'
+                            'Comment': 'Score of the away team'
                         }
                     ],
-                    'Location': f's3://{Marara_nba_data_lake}/nba_data/',
+                    'Location': f's3://{bucket_name}/nba_data.json',
                     'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
                     'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
-                    'Compressed': False,
                     'SerdeInfo': {
-                        'SerializationLibrary': 'org.apache.hadoop.hive.serde2.OpenCSVSerde',
-                        'Parameters': {
-                            'separatorChar': ',',
-                            'quoteChar': '"',
-                            'skip.header.line.count': '1'
-                        } ,
-                    } ,
-                },
-            },
+                        'SerializationLibrary': 'org.openx.data.jsonserde.JsonSerDe'
+                    }
+                }
+            }
         )
-        print( f"Glue Table'nba_players' created successfully.")
+        print("Glue table created successfully.")
+    except glue_Client.exceptions.AlreadyExistsException:
+        print("Glue table already exists.")
     except Exception as e:
         print(f"Error creating table: {e}")
 
-def configure_athena() :
+def fetch_nba_data():
+    response = requests.get(nba_endpoint, headers={"Ocp-Apim-Subscription-Key": api_key})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to fetch NBA data: {response.status_code}")
+        return None
 
-    try :
-        athena_Client.start_query_execution(
-            QueryString = f"CREATE DATABASE IF NOT EXISTS {Marara_nba_data_lake}",
-            ResultConfiguration = {
-                'OutputLocation': athena_output_location,
-            }
-        )
-        print("Athena configured successfully.")
-    except Exception as e:
-        print(f"Error configuring Athena: {e}")
 def upload_data(s3_client, data):
     try:
         # Convert data to JSON string
@@ -131,15 +116,26 @@ def upload_data(s3_client, data):
     except Exception as e:
         print(f"Error uploading data: {e}")
 
-#main function
+def configure_athena():
+    try:
+        athena_Client.start_query_execution(
+            QueryString=f"CREATE DATABASE IF NOT EXISTS {glue_db_name}",
+            ResultConfiguration={
+                'OutputLocation': athena_output_location,
+            }
+        )
+        print("Athena configured successfully.")
+    except Exception as e:
+        print(f"Error configuring Athena: {e}")
 
+# Main function
 def main():
     print("Creating NBA Data Lake")
     print("Setting up data lake for NBA sports analytics...")
     time.sleep(5)
 
     create_bucket()
-    create_Glue_Database()
+    create_glue_database()
     nba_data = fetch_nba_data()
     if nba_data:
         upload_data(s3_Client, nba_data)
