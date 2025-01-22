@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 # AWS configuration
-region ="us-east-1"
+region = "us-east-1"
 bucket_name = "Marara_nba-data-lake"
 glue_db_name = "Marara_nba_data_lake"
 athena_output_location = "s3://Marara_nba-data-lake/athena_output"
@@ -23,28 +23,29 @@ glue_Client = boto3.client('glue', region_name=region)
 athena_Client = boto3.client('athena', region_name=region) 
 
 def create_bucket():
-
     try:
         if region == "us-east-1":
-            s3_Client.create_bucket(Bucket=Marara_nba_data_lake)
+            s3_Client.create_bucket(Bucket=bucket_name)
         else:
-            s3_Client.create_bucket(Bucket=Marara_nba_data_lake,CreateBucketConfiguration={'LocationConstraint': region})
-            print("Bucket created successfully")
+            s3_Client.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': region})
+        print("Bucket created successfully")
     except Exception as e:
         print(f"Error creating bucket: {e}")
 
 def create_Glue_Database():
-    
     try:
         glue_Client.create_database(
             DatabaseInput={
-                'Name': MararaNbaDataLake,
-                'Description' : "Glue database for NBA sports analytics.",
+                'Name': glue_db_name
             }
         )
-        print(f"Database'{MararaNbaDataLake}' created successfully")
+        print("Glue database created successfully")
     except Exception as e:
         print(f"Error creating database: {e}")
+
+def fetch_nba_data():
+    response = requests.get(nba_endpoint, headers={"Ocp-Apim-Subscription-Key": api_key})
+    return response.json()
 
 def create_glue_table():
     try :
@@ -138,4 +139,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
