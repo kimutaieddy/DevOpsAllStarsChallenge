@@ -9,13 +9,16 @@ load_dotenv()
 
 # AWS configuration
 region = "us-east-1"
-bucket_name = "Marara_nba-data-lake"
-glue_db_name = "Marara_nba_data_lake"
-athena_output_location = "s3://Marara_nba-data-lake/athena_output"
+bucket_name = "marara-nba-data-lake"  # Ensure the bucket name is valid
+glue_db_name = "marara_nba_data_lake"
+athena_output_location = "s3://marara-nba-data-lake/athena_output"
 
 # Sportsdata.io configurations (loaded from .env)
 api_key = os.getenv("SPORTSDATAIO_API_KEY")
 nba_endpoint = os.getenv("SPORTSDATAIO_NBA_ENDPOINT")
+
+if not api_key or not nba_endpoint:
+    raise ValueError("API key or NBA endpoint not found in .env file")
 
 # Create AWS clients
 s3_Client = boto3.client('s3', region_name=region)
