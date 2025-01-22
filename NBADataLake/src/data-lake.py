@@ -33,7 +33,7 @@ def create_bucket():
     except Exception as e:
         print(f"Error creating bucket: {e}")
 
-def create_Glue_Database()
+def create_Glue_Database():
     
     try:
         glue_Client.create_database(
