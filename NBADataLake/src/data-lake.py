@@ -121,7 +121,15 @@ def configure_athena() :
         print("Athena configured successfully.")
     except Exception as e:
         print(f"Error configuring Athena: {e}")
-
+def upload_data(s3_client, data):
+    try:
+        # Convert data to JSON string
+        json_data = json.dumps(data)
+        # Upload JSON data to S3 bucket
+        s3_client.put_object(Bucket=bucket_name, Key='nba_data.json', Body=json_data)
+        print("Data uploaded successfully to S3 bucket.")
+    except Exception as e:
+        print(f"Error uploading data: {e}")
 
 #main function
 
