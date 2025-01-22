@@ -118,4 +118,24 @@ def configure_athena() :
     except Exception as e:
         print(f"Error configuring Athena: {e}")
 
+
+#main function
+
+def main():
+    print("Creating NBA Data Lake")
+    print("Setting up data lake for NBA sports analytics...")
+    time.sleep(5)
+
+    create_bucket()
+    create_Glue_Database()
+    nba_data = fetch_nba_data()
+    if nba_data:
+        upload_data(s3_Client, nba_data)
+    create_glue_table()
+    configure_athena()
+
+    print("NBA Data Lake setup completed successfully.")
+
+if __name__ == "__main__":
+    main()
     
