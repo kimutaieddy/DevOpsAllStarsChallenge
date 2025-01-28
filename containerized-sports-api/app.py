@@ -40,6 +40,9 @@ def get_nfl_schedule():
         response = requests.get(SERP_API_URL, params=params)
         response.raise_for_status()
         data = response.json()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"message": "An error occurred.", "error": str(e)}), 500
 
         # Extract games from sports_results
         games = data.get("sports_results", {}).get("games", [])
