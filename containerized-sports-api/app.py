@@ -14,9 +14,12 @@ Returns:
 from flask import Flask, jsonify
 import requests
 import os
-import pdb
+import logging
 
 app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 # SerpAPI base URL and API key
 SERP_API_URL = "https://serpapi.com/search.json"
@@ -29,7 +32,7 @@ def home():
 
 @app.route('/sports', methods=['GET'])
 def get_nfl_schedule():
-    #Fetches the NFL schedule from SerpAPI and returns it as JSON
+    # Fetches the NFL schedule from SerpAPI and returns it as JSON
     try:
         # Query SerpAPI
         params = {
@@ -40,9 +43,6 @@ def get_nfl_schedule():
         response = requests.get(SERP_API_URL, params=params)
         response.raise_for_status()
         data = response.json()
-        return jsonify(data)
-    except Exception as e:
-        return jsonify({"message": "An error occurred.", "error": str(e)}), 500
 
         # Extract games from sports_results
         games = data.get("sports_results", {}).get("games", [])
