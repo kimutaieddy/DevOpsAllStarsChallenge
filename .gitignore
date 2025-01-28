@@ -7,3 +7,5 @@ NBADataLake/src/.env
 .env
 
 containerized-sports-api/env
+
+.venv
