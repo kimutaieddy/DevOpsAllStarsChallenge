@@ -14,7 +14,7 @@ Returns:
 from flask import Flask, jsonify
 import requests
 import os
-
+import pdb
 
 app = Flask(__name__)
 
@@ -64,6 +64,7 @@ def get_nfl_schedule():
     
     except Exception as e:
         return jsonify({"message": "An error occurred.", "error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
