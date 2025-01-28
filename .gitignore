@@ -5,3 +5,5 @@ Event-driven architecture/API KEY
 
 NBADataLake/src/.env
 .env
+
+containerized-sports-api/env
