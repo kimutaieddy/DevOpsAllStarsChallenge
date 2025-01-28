@@ -1,3 +1,16 @@
+"""
+Fetches and returns the NFL schedule as JSON.
+
+This function handles GET requests to the '/sports' endpoint. It queries the
+SerpAPI for the NFL schedule using a predefined API key and URL. The response
+is processed to extract game details, which are then formatted and returned
+as a JSON response. If no games are found, an appropriate message is returned.
+In case of an error during the API call or data processing, an error message
+is returned.
+
+Returns:
+    JSON: A JSON response containing the NFL schedule or an error message.
+"""
 from flask import Flask, jsonify
 import requests
 import os
